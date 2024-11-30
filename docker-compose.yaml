@@ -1,0 +1,27 @@
+version: '3.8'
+services:
+  gigachat_api:
+    build: 
+      context: .
+      dockerfile: ./api_backend/gigachat/Dockerfile
+    container_name: gigachat_api_c
+    ports:
+      - 1702:1702/tcp
+    volumes:
+      - ./data/clients:/app/data/clients
+    
+  telegram_backend:
+    build:
+      context: .
+      dockerfile: ./telegram_backend/Dockerfile
+    container_name: telegram_backend_c
+    ports:
+      - 80:80
+    volumes:
+      - ./data/clients:/app/data/clients
+  
+  frontend:
+    build: ./frontend
+    container_name: frontend_c
+    ports:
+      - 3000:3000
