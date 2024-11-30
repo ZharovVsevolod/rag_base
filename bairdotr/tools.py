@@ -1,13 +1,13 @@
-from langchain.pydantic_v1 import BaseModel, Field
-from langchain.tools import BaseTool
+# from pydantic import BaseModel, Field
+# from langchain.tools import BaseTool
 
 from langchain.schema import HumanMessage, SystemMessage
 from langchain_core.output_parsers import StrOutputParser
 from langchain_core.runnables import RunnablePassthrough
 from langchain_core.documents import Document
 
-from aurora.documents import FaissStoreHandler
-from aurora.config import (
+from bairdotr.documents import FaissStoreHandler
+from bairdotr.config import (
     K_DOCUMENTS_FOR_RAG,
     ENABLE_EXTRA_STEPS,
     ENABLE_CONTEXT_PARAPHRASE,
@@ -16,7 +16,7 @@ from aurora.config import (
     ENABNLE_HYDE,
     K_DOCUMENTS_FOR_EXTRA_STEPS
 )
-from aurora.blanks import (
+from bairdotr.blanks import (
     get_preprocess_message,
     get_hyde_message,
     get_prompt_with_context,
@@ -28,18 +28,18 @@ import time
 from collections import Counter
 from typing import Type, Union, List
 
-def get_standard_faiss_store_handler() -> FaissStoreHandler:
-    """Мега-костыль для работы CustomRagTool"""
-    from .gigach_llm import get_gigachat_embeddings
+# def get_standard_faiss_store_handler() -> FaissStoreHandler:
+#     """Мега-костыль для работы CustomRagTool"""
+#     from .ollama_llm import get_emdeddings
 
-    embeddings = get_gigachat_embeddings()
-    store_handler = FaissStoreHandler(
-        embeddings = embeddings,
-        need_load = True,
-        load_path = "data/faiss_gigaemb"
-    )
+#     embeddings = get_emdeddings()
+#     store_handler = FaissStoreHandler(
+#         embeddings = embeddings,
+#         need_load = True,
+#         load_path = "data/faiss_gigaemb"
+#     )
 
-    return store_handler
+#     return store_handler
 
 def add_rag_docs_to_question(question: str, retriever_answer: list) -> str:
     """Добавление к промпту найденные RAGом документы"""
@@ -71,76 +71,76 @@ def question_with_RAG(
 
     return answer
 
-class RagInput(BaseModel):
-    question: str = Field(description = "Вопрос пользователя")
+# class RagInput(BaseModel):
+#     question: str = Field(description = "Вопрос пользователя")
 
-class CustomRagTool(BaseTool):
-    name = "search_information"
-    description = "Поиск информации по темам, связанным с безопасностью, мошенничеством или финансами."
-    args_schema: Type[BaseModel] = RagInput
+# class CustomRagTool(BaseTool):
+#     name = "search_information"
+#     description = "Поиск информации по темам, связанным с безопасностью, мошенничеством или финансами."
+#     args_schema: Type[BaseModel] = RagInput
 
-    def _run(
-            self,
-            question: str
-    ) -> str:
-        """Использование инструмента поиска"""
-        vector_store = get_standard_faiss_store_handler()
-        retriever_answer = vector_store.similarity_search(question, k = 1)
+#     def _run(
+#             self,
+#             question: str
+#     ) -> str:
+#         """Использование инструмента поиска"""
+#         vector_store = get_standard_faiss_store_handler()
+#         retriever_answer = vector_store.similarity_search(question, k = 1)
 
-        final_documens = add_rag_docs_to_question(question, retriever_answer)
+#         final_documens = add_rag_docs_to_question(question, retriever_answer)
 
-        return final_documens
-
-
-class PhoneInput(BaseModel):
-    phone_number: str = Field(description = "Номер телефона, о котором спросил пользователь")
-
-class PhoneSearch(BaseTool):
-    name = "phone_search"
-    description = "Получение информации о владельце номера телефона"
-    args_schema: Type[BaseModel] = PhoneInput
-
-    def _run(
-        self,
-        phone_number: str
-    ) -> str:
-        """Использование инструмента пробивки по телефону"""
-        return f"Владелец телефона {phone_number} - хороший человек"
+#         return final_documens
 
 
-class AllToolsHandler():
-    """Класс-помощник для хранения функций"""
-    def __init__(self):
-        self.tools = []
+# class PhoneInput(BaseModel):
+#     phone_number: str = Field(description = "Номер телефона, о котором спросил пользователь")
+
+# class PhoneSearch(BaseTool):
+#     name = "phone_search"
+#     description = "Получение информации о владельце номера телефона"
+#     args_schema: Type[BaseModel] = PhoneInput
+
+#     def _run(
+#         self,
+#         phone_number: str
+#     ) -> str:
+#         """Использование инструмента пробивки по телефону"""
+#         return f"Владелец телефона {phone_number} - хороший человек"
+
+
+# class AllToolsHandler():
+#     """Класс-помощник для хранения функций"""
+#     def __init__(self):
+#         self.tools = []
     
-    def append_tool(self, tool):
-        self.tools.append(tool)
+#     def append_tool(self, tool):
+#         self.tools.append(tool)
 
-    def get_tools_list(self):
-        return self.tools
+#     def get_tools_list(self):
+#         return self.tools
     
-    def get_tools_dict(self):
-        tools_dictionary = {}
-        for tool in self.tools:
-            tool_name = tool.name
-            tools_dictionary[tool_name] = tool
+#     def get_tools_dict(self):
+#         tools_dictionary = {}
+#         for tool in self.tools:
+#             tool_name = tool.name
+#             tools_dictionary[tool_name] = tool
         
-        return tools_dictionary
+#         return tools_dictionary
 
 
-def get_standard_tools(vector_store: FaissStoreHandler, extended: bool = False) -> list[CustomRagTool, PhoneSearch]:
-    """Возращает стандартный набор инструментов: CustomRagTool и PhoneSearch"""
-    rag_tool = CustomRagTool(vector_store = vector_store)
-    if extended:
-        phone_tool = PhoneSearch()
-        return [rag_tool, phone_tool]
-    else:
-        return [rag_tool]
+# def get_standard_tools(vector_store: FaissStoreHandler, extended: bool = False) -> list[CustomRagTool, PhoneSearch]:
+#     """Возращает стандартный набор инструментов: CustomRagTool и PhoneSearch"""
+#     rag_tool = CustomRagTool(vector_store = vector_store)
+#     if extended:
+#         phone_tool = PhoneSearch()
+#         return [rag_tool, phone_tool]
+#     else:
+#         return [rag_tool]
 
 
-def give_to_model_tools(model, tools: list):
-    """Дать модели знания о том, какие функции она может вызывать"""
-    return model.bind_tools(tools)
+# def give_to_model_tools(model, tools: list):
+#     """Дать модели знания о том, какие функции она может вызывать"""
+#     return model.bind_tools(tools)
 
 
 #---------------------------------
@@ -160,7 +160,6 @@ def get_top_unique_docs(doc_counts, initial_question_docs, top_n: int = 5):
     top_documents = [doc for doc, _ in sorted_docs[:top_n]]
 
     return top_documents
-
 
 def rearrange_docs(
         queries: List[str], 

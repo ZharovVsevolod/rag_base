@@ -18,18 +18,17 @@ from typing import AsyncIterable
 from fastapi.responses import StreamingResponse
 from langchain.callbacks import AsyncIteratorCallbackHandler
 
-from aurora.gigach_llm import get_all_in_one_rag, get_all_in_one_tools, get_gigachat
-from aurora.llm_wrapper import(
-    get_model_answer_tools, 
+from bairdotr.ollama_llm import get_all_in_one_rag, get_ollama_model
+
+from bairdotr.llm_wrapper import(
     get_model_answer_rag, 
     clean_history, 
     cut_history,
     get_runnable_chain,
     make_config_for_chain
 )
-from aurora.tools import question_with_RAG
-from aurora.config import NEED_RAG_ALWAYS
-from aurora.database_management import(
+from bairdotr.tools import question_with_RAG
+from bairdotr.database_management import(
     read_data_token,
     make_token,
     check_token,
@@ -40,9 +39,6 @@ from aurora.database_management import(
     generate_hex,
     get_session_history_with_local_file
 )
-
-from dotenv import load_dotenv
-load_dotenv()
 
 app = FastAPI()
 
@@ -60,10 +56,7 @@ app.add_middleware(
 )
 # -----------------------
 
-if NEED_RAG_ALWAYS:
-    MODEL, VECTOR_STORE = get_all_in_one_rag()
-else:
-    MODEL, TOOLS_HANDLER = get_all_in_one_tools()
+MODEL, VECTOR_STORE = get_all_in_one_rag()
 
 class CommonHeaders(BaseModel):
     token: str
@@ -126,20 +119,12 @@ def model_answer(headers: Annotated[CommonHeaders, Header()], body: RequestBody)
 
         history = read_hot_history(session_id)
 
-        if NEED_RAG_ALWAYS:
-            answer, history = get_model_answer_rag(
-                human_message = body.question,
-                model = MODEL,
-                vector_store = VECTOR_STORE,
-                history = history
-            )
-        else:
-            answer, history = get_model_answer_tools(
-                human_message = body.question,
-                model = MODEL,
-                history = history,
-                tools_handler = TOOLS_HANDLER
-            )
+        answer, history = get_model_answer_rag(
+            human_message = body.question,
+            model = MODEL,
+            vector_store = VECTOR_STORE,
+            history = history
+        )
 
         history = clean_history(history)
         history = cut_history(history)
@@ -165,7 +150,7 @@ async def validation_exception_handler(request: Request, exc: RequestValidationE
 
 async def send_message(session_id: str, content: str) -> AsyncIterable[str]:
     callback = AsyncIteratorCallbackHandler()
-    model = get_gigachat(need_streaming = True, need_callback = [callback])
+    model = get_ollama_model(need_callback = [callback])
 
     runnable_with_history = get_runnable_chain(model)
     config = make_config_for_chain(session_id)
@@ -196,8 +181,7 @@ async def stream_chat(message: RequestBody):
 async def websocket_endpoint(websocket: WebSocket):
     await websocket.accept()
 
-    model = get_gigachat(need_streaming = True)
-    runnable_with_history = get_runnable_chain(model)
+    runnable_with_history = get_runnable_chain(MODEL)
     session_id = generate_hex()
     config = make_config_for_chain(session_id)
 
@@ -205,13 +189,21 @@ async def websocket_endpoint(websocket: WebSocket):
         data = await websocket.receive_text()
         message = ast.literal_eval(data)["message"]
 
+        print("Message", flush = True)
+        print(message, flush = True)
+        print(flush = True)
+
         # RAG system
         message_with_rag_docs = question_with_RAG(
             question = message, 
             vector_store = VECTOR_STORE,
-            model = model,
+            model = MODEL,
             history = get_session_history_with_local_file(session_id).messages
         )
+
+        print("Rag", flush = True)
+        print(message_with_rag_docs, flush = True)
+        print(flush = True)
 
         async for chunk in runnable_with_history.astream_events({'input': message_with_rag_docs}, version="v2", config=config):
             if chunk["event"] in ["on_parser_start", "on_parser_stream"]:

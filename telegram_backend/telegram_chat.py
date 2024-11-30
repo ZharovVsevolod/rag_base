@@ -7,8 +7,8 @@ from telegram.ext import (
     filters
 )
 
-from aurora.speech import audio2text, convert_audio_ffmpeg
-from aurora.blanks import (
+from bairdotr.speech import audio2text, convert_audio_ffmpeg
+from bairdotr.blanks import (
     get_standard_start_message,
     get_error_answer, 
     get_big_info, 
@@ -17,8 +17,8 @@ from aurora.blanks import (
     get_eye_end_message,
     get_eye_wait_message
 )
-from aurora.database_management import save_telegram_chat_ids, check_eye
-from aurora.god_api import (
+from bairdotr.database_management import save_telegram_chat_ids, check_eye
+from bairdotr.god_api import (
     get_all_info, 
     god_answer_format,
     check_parser_folder,

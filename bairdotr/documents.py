@@ -9,7 +9,7 @@ from langchain_community.docstore.in_memory import InMemoryDocstore
 from typing import List, Literal, Union
 import re
 
-from aurora.config import CHUNK_SIZE_FOR_RECURSIVE, CHUNK_OVERLAP
+from bairdotr.config import CHUNK_SIZE_FOR_RECURSIVE, CHUNK_OVERLAP
 
 def get_standard_splitter() -> CharacterTextSplitter:
     """Возвращает стандартный CharacterTextSplitter (для подготовленных по структуре заранее документов) со следующими характеристиками:\n

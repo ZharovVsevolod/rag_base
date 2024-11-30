@@ -1,5 +1,5 @@
 # The builder image, used to build the virtual environment
-FROM python:3.11-buster as builder
+FROM python:3.12-buster as builder
 
 RUN pip install poetry==1.8.2
 
@@ -16,7 +16,7 @@ RUN touch README.md
 RUN poetry install --extras "telegram" --no-root && rm -rf $POETRY_CACHE_DIR
 
 # The runtime image, used to just run the code provided its virtual environment
-FROM python:3.11-slim-buster as runtime
+FROM python:3.12-slim-buster as runtime
 
 ENV VIRTUAL_ENV=/app/.venv \
 PATH="/app/.venv/bin:$PATH"
@@ -29,7 +29,7 @@ RUN apt-get update
 RUN apt-get install -y ffmpeg
 
 COPY data ./data
-COPY aurora ./aurora
+COPY bairdotr ./bairdotr
 COPY .env ./
 COPY telegram_backend/telegram_chat.py ./
 COPY telegram_backend/utils ./utils

@@ -1,13 +1,13 @@
 from langchain.schema import HumanMessage, SystemMessage, AIMessage
 from langchain_community.chat_message_histories.file import FileChatMessageHistory
 
-from aurora.config import (
+from bairdotr.config import (
     DATA_FOLDER, 
     HISTORY_FILE_NAME, 
     CSV_TOKENS_NAME, 
     HOT_HISTORY, 
     TELEGRAM_CHAT_IDS, 
-    TELEGRAM_CHAT_IDS_EYE,
+    # TELEGRAM_CHAT_IDS_EYE,
     PATH_TO_NEW_HOT_HISTORY
 )
 
@@ -171,21 +171,21 @@ def save_telegram_chat_ids(chat_id: str) -> bool:
 
     return True
 
-def check_eye(chat_id: str) -> bool:
-    """Проверка, разрешено ли этому chat_id пользоваться функцией eye"""
-    chat_id = str(chat_id)
+# def check_eye(chat_id: str) -> bool:
+#     """Проверка, разрешено ли этому chat_id пользоваться функцией eye"""
+#     chat_id = str(chat_id)
 
-    if save_telegram_chat_ids(chat_id):
-        filename = DATA_FOLDER + "/" + TELEGRAM_CHAT_IDS_EYE
+#     if save_telegram_chat_ids(chat_id):
+#         filename = DATA_FOLDER + "/" + TELEGRAM_CHAT_IDS_EYE
 
-        with open(filename) as file:
-            ids = file.readlines()
-        ids = [i[:-1] for i in ids] # убираем \n в конце
+#         with open(filename) as file:
+#             ids = file.readlines()
+#         ids = [i[:-1] for i in ids] # убираем \n в конце
 
-        if chat_id in ids:
-            return True
+#         if chat_id in ids:
+#             return True
 
-    return False
+#     return False
 
 # -------------------------------
 # Database v2 via langchain tools

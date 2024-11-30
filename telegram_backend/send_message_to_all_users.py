@@ -1,6 +1,6 @@
 import asyncio
 from telegram import Bot
-from aurora.config import DATA_FOLDER, TELEGRAM_CHAT_IDS_EYE
+from bairdotr.config import DATA_FOLDER, TELEGRAM_CHAT_IDS_EYE
 import os
 from dotenv import load_dotenv
 

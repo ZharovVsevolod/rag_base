@@ -1,9 +1,8 @@
-from aurora.documents import FaissStoreHandler
-from aurora.gigach_llm import get_gigachat_embeddings
-from aurora.config import PREPARED, JUST_CLEANED, PATH_TO_VECTOR_STORE
+from bairdotr.documents import FaissStoreHandler
+from bairdotr.ollama_llm import get_emdeddings
+from bairdotr.config import PREPARED, JUST_CLEANED, PATH_TO_VECTOR_STORE, EMBEDDINGS_NAME
 
 import os
-from dotenv import load_dotenv
 
 def main():
     print("Start to prepare vector store and new documents...")
@@ -21,7 +20,7 @@ def main():
     print()
 
     print("Creating new blank vector store")
-    vector_store = FaissStoreHandler(get_gigachat_embeddings())
+    vector_store = FaissStoreHandler(get_emdeddings(EMBEDDINGS_NAME, inside_container = False))
 
     print("Adding cleaned and prepared docs...")
     for doc in prepared_docs:
@@ -54,5 +53,4 @@ def main():
 
 
 if __name__ == "__main__":
-    load_dotenv()
     main()

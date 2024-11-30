@@ -1,5 +1,6 @@
 .env
 data/
 __pycache__/
-aurora/legacy/
+bairdotr/legacy/
 dev_tests/
+ollama/

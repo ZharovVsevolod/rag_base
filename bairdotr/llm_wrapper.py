@@ -1,48 +1,48 @@
 from langchain.schema import HumanMessage
-from aurora.tools import AllToolsHandler, question_with_RAG
-from aurora.blanks import get_standard_start_message, get_stardard_system_message
-from aurora.config import N_HISTORY, RUN_NAME
-from aurora.documents import FaissStoreHandler
+from bairdotr.tools import question_with_RAG #, AllToolsHandler
+from bairdotr.blanks import get_standard_start_message, get_stardard_system_message
+from bairdotr.config import N_HISTORY, RUN_NAME
+from bairdotr.documents import FaissStoreHandler
 from typing import Tuple
 
-from aurora.database_management import get_session_history_with_local_file
+from bairdotr.database_management import get_session_history_with_local_file
 from langchain_core.prompts import ChatPromptTemplate
 from langchain_core.runnables.history import RunnableWithMessageHistory
 from langchain_core.output_parsers import StrOutputParser
 
-def get_model_answer_tools(
-        human_message: str, 
-        model, 
-        history: list = None, 
-        tools_handler: AllToolsHandler = None
-    ) -> Tuple[str, list]:
-    """Получить ответ модели\n
-    Возвращает ответ модели и историю запросов"""
-    h_message = HumanMessage(content = human_message)
-    if history is None:
-        s_message = get_stardard_system_message()
-        start_message = get_standard_start_message()
-        history = [s_message, start_message, h_message]
-    else:
-        history.append(h_message)
+# def get_model_answer_tools(
+#         human_message: str, 
+#         model, 
+#         history: list = None, 
+#         tools_handler: AllToolsHandler = None
+#     ) -> Tuple[str, list]:
+#     """Получить ответ модели\n
+#     Возвращает ответ модели и историю запросов"""
+#     h_message = HumanMessage(content = human_message)
+#     if history is None:
+#         s_message = get_stardard_system_message()
+#         start_message = get_standard_start_message()
+#         history = [s_message, start_message, h_message]
+#     else:
+#         history.append(h_message)
     
-    answer = model.invoke(history)
+#     answer = model.invoke(history)
 
-    # Обработка, был ли вызов функции
-    if tools_handler is not None and answer.content == "":
-        tools = tools_handler.get_tools_dict()
-        history.append(answer)
+#     # Обработка, был ли вызов функции
+#     if tools_handler is not None and answer.content == "":
+#         tools = tools_handler.get_tools_dict()
+#         history.append(answer)
         
-        for tool_call in answer.tool_calls:
-            selected_tool = tools[tool_call["name"].lower()]
-            tool_msg = selected_tool.invoke(tool_call)
-            history.append(tool_msg)
+#         for tool_call in answer.tool_calls:
+#             selected_tool = tools[tool_call["name"].lower()]
+#             tool_msg = selected_tool.invoke(tool_call)
+#             history.append(tool_msg)
         
-        answer = model.invoke(history)
+#         answer = model.invoke(history)
     
-    history.append(answer)
+#     history.append(answer)
     
-    return answer.content, history
+#     return answer.content, history
 
 def get_model_answer_rag(
         human_message: str, 
