@@ -20,7 +20,7 @@ def main():
     print()
 
     print("Creating new blank vector store")
-    vector_store = FaissStoreHandler(get_emdeddings(EMBEDDINGS_NAME, inside_container = False))
+    vector_store = FaissStoreHandler(get_emdeddings("llama3.2", inside_container = False))
 
     print("Adding cleaned and prepared docs...")
     for doc in prepared_docs:

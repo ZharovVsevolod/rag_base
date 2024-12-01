@@ -1,14 +1,17 @@
+# LLM модель
+LLM_MODEL = "gemma2"
+
 # Длина контекста истории
 N_HISTORY = 12
 
 # Модель эмбеддингов
-# EMBEDDINGS_NAME = "DiTy/bi-encoder-russian-msmarco"
-EMBEDDINGS_NAME = "DeepPavlov/rubert-base-cased-sentence"
+EMBEDDINGS_NAME = "DiTy/bi-encoder-russian-msmarco"
+# EMBEDDINGS_NAME = "DeepPavlov/rubert-base-cased-sentence"
 
 # RAG система
 K_DOCUMENTS_FOR_RAG = 3
 NEED_RAG_ALWAYS = True
-PATH_TO_VECTOR_STORE = "data/dp_bert_faiss_index"
+PATH_TO_VECTOR_STORE = "data/dp_faiss_index"
 ## RAG - дополнительные шаги модифицирования вопроса пользователя
 ENABLE_EXTRA_STEPS = False # Мастер-рубильник доп. шагов
 ENABLE_CONTEXT_PARAPHRASE = True

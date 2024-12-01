@@ -35,6 +35,8 @@ const StreamLangchain = () => {
                 // When a new stream starts
                 ongoingStream = { id: data.run_id, content: '' };
                 setResponses(prevResponses => [...prevResponses, { sender, message: '', id: data.run_id }]);
+            } else if (data.event === 'rag_system') {
+                setResponses(prevResponses => [...prevResponses, { sender, message: data.data, id: data.run_id }]);
             } else if (data.event === 'on_parser_stream' && ongoingStream && data.run_id === ongoingStream.id) {
                 // During a stream, appending new chunks of data
                 setResponses(prevResponses => prevResponses.map(msg =>

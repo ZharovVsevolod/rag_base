@@ -53,11 +53,22 @@ def add_rag_docs_to_question(question: str, retriever_answer: list) -> str:
 
     return answer
 
+def merge_documents(retriever_answer: List[Document]) -> str:
+    answer = "Отрывки из документов, найденные ретривером\n\n"
+
+    for i in range(K_DOCUMENTS_FOR_RAG):
+        answer += f"## Открывок {i + 1}\n\n"
+        answer += retriever_answer[i].page_content
+        answer += "\n\n"
+    
+    return answer
+
 def question_with_RAG(
         question: str, 
         vector_store: FaissStoreHandler, 
         model = None, 
-        history = None
+        history = None,
+        need_to_rag_docs_return: bool = False
 ) -> str:
     """Вызов RAG по вопросу пользователя"""
     if ENABLE_EXTRA_STEPS:
@@ -69,6 +80,10 @@ def question_with_RAG(
     
     answer = add_rag_docs_to_question(question, retriever_answer)
 
+    if need_to_rag_docs_return:
+        docs = merge_documents(retriever_answer)
+        return answer, docs
+    
     return answer
 
 # class RagInput(BaseModel):

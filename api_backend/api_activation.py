@@ -19,7 +19,6 @@ from fastapi.responses import StreamingResponse
 from langchain.callbacks import AsyncIteratorCallbackHandler
 
 from bairdotr.ollama_llm import get_all_in_one_rag, get_ollama_model
-
 from bairdotr.llm_wrapper import(
     get_model_answer_rag, 
     clean_history, 
@@ -189,21 +188,21 @@ async def websocket_endpoint(websocket: WebSocket):
         data = await websocket.receive_text()
         message = ast.literal_eval(data)["message"]
 
-        print("Message", flush = True)
-        print(message, flush = True)
-        print(flush = True)
-
         # RAG system
-        message_with_rag_docs = question_with_RAG(
+        message_with_rag_docs, rag_answer = question_with_RAG(
             question = message, 
             vector_store = VECTOR_STORE,
             model = MODEL,
-            history = get_session_history_with_local_file(session_id).messages
+            history = get_session_history_with_local_file(session_id).messages,
+            need_to_rag_docs_return = True
         )
 
-        print("Rag", flush = True)
-        print(message_with_rag_docs, flush = True)
-        print(flush = True)
+        await websocket.send_json({
+            "event": "rag_system",
+            "name": "RAG",
+            "data": rag_answer,
+            "run_id": "rag_system"
+        })
 
         async for chunk in runnable_with_history.astream_events({'input': message_with_rag_docs}, version="v2", config=config):
             if chunk["event"] in ["on_parser_start", "on_parser_stream"]:
