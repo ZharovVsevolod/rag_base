@@ -5,8 +5,8 @@ LLM_MODEL = "gemma2"
 N_HISTORY = 12
 
 # Модель эмбеддингов
-EMBEDDINGS_NAME = "DiTy/bi-encoder-russian-msmarco"
-# EMBEDDINGS_NAME = "DeepPavlov/rubert-base-cased-sentence"
+# EMBEDDINGS_NAME = "DiTy/bi-encoder-russian-msmarco"
+EMBEDDINGS_NAME = "intfloat/multilingual-e5-large-instruct"
 
 # RAG система
 K_DOCUMENTS_FOR_RAG = 3

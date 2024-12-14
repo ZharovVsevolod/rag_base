@@ -11,7 +11,7 @@ services:
         reservations:
           devices:
             - driver: nvidia
-              count: 1 # alternatively, use `count: all` for all GPUs
+              count: 1
               capabilities: [gpu]
 
   api:
@@ -23,16 +23,7 @@ services:
       - 1702:1702/tcp
     volumes:
       - ./data/clients:/app/data/clients
-    
-  # telegram_backend:
-  #   build:
-  #     context: .
-  #     dockerfile: ./telegram_backend/Dockerfile
-  #   container_name: telegram_backend_c
-  #   ports:
-  #     - 80:80
-  #   volumes:
-  #     - ./data/clients:/app/data/clients
+      - ./huggingface:/root/.cache/huggingface
   
   frontend:
     build: ./frontend

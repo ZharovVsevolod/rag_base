@@ -4,3 +4,5 @@ __pycache__/
 bairdotr/legacy/
 dev_tests/
 ollama/
+telegram_backend/
+huggingface/
