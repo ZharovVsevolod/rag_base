@@ -11,7 +11,7 @@ EMBEDDINGS_NAME = "intfloat/multilingual-e5-large-instruct"
 # RAG система
 K_DOCUMENTS_FOR_RAG = 3
 NEED_RAG_ALWAYS = True
-PATH_TO_VECTOR_STORE = "data/dp_faiss_index"
+PATH_TO_VECTOR_STORE = "data/mirea_faiss_index"
 ## RAG - дополнительные шаги модифицирования вопроса пользователя
 ENABLE_EXTRA_STEPS = False # Мастер-рубильник доп. шагов
 ENABLE_CONTEXT_PARAPHRASE = True

@@ -1,4 +1,4 @@
-from langchain_ollama import ChatOllama, OllamaEmbeddings
+from langchain_ollama import ChatOllama
 from langchain_huggingface.embeddings import HuggingFaceEmbeddings
 
 from bairdotr.tools import FaissStoreHandler
@@ -19,19 +19,8 @@ def get_all_in_one_rag() -> Tuple[ChatOllama, FaissStoreHandler]:
     )
     return model, vector_store
 
-def get_emdeddings(embeddings_name: str, inside_container: bool = True):
+def get_emdeddings(embeddings_name: str):
     embeddings = HuggingFaceEmbeddings(model_name = embeddings_name)
-    # if inside_container:
-    #     embeddings = OllamaEmbeddings(
-    #         model = embeddings_name,
-    #         base_url = "http://ollama-container:11434"
-    #     )
-    
-    # else:
-    #     embeddings = OllamaEmbeddings(
-    #         model = embeddings_name
-    #     )
-    
     return embeddings
 
 def get_ollama_model(
