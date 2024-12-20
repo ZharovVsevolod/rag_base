@@ -5,7 +5,6 @@ LLM_MODEL = "gemma2"
 N_HISTORY = 12
 
 # Модель эмбеддингов
-# EMBEDDINGS_NAME = "DiTy/bi-encoder-russian-msmarco"
 EMBEDDINGS_NAME = "intfloat/multilingual-e5-large-instruct"
 
 # RAG система
@@ -29,7 +28,6 @@ DATA_FOLDER = "data/clients"
 CSV_TOKENS_NAME = "tokens.csv"
 HISTORY_FILE_NAME = "history.csv"
 HOT_HISTORY = "hot_history"
-TELEGRAM_CHAT_IDS = "telegram_chat_ids.txt"
 
 # Vector Store
 PREPARED = "data/docs/cleaned_and_prepared"
