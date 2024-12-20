@@ -5,9 +5,7 @@ from bairdotr.config import (
     DATA_FOLDER, 
     HISTORY_FILE_NAME, 
     CSV_TOKENS_NAME, 
-    HOT_HISTORY, 
-    TELEGRAM_CHAT_IDS, 
-    # TELEGRAM_CHAT_IDS_EYE,
+    HOT_HISTORY,
     PATH_TO_NEW_HOT_HISTORY
 )
 
@@ -104,7 +102,7 @@ def read_hot_history(token: str):
         return None
 
 def write_hot_history(token: str, history: list) -> None:
-    """Запись "ничисто" новой полной последней актуальной истории диалога с пользователем в "горячую" историю"""
+    """Запись "начисто" новой полной последней актуальной истории диалога с пользователем в "горячую" историю"""
     path = get_path_to_hot_history(token)
 
     with open(path, "w+") as file:
@@ -146,46 +144,6 @@ def check_token(token: str) -> bool:
             break
 
     return true_token
-
-def read_all_saved_chat_id() -> list:
-    """Прочесть файл с сохранёнными chat_id и вернуть лист с ними"""
-    filename = DATA_FOLDER + "/" + TELEGRAM_CHAT_IDS
-    with open(filename) as file:
-        ids = file.readlines()
-    ids = [i[:-1] for i in ids] # убираем \n в конце
-
-    return ids
-
-def save_telegram_chat_ids(chat_id: str) -> bool:
-    """Проверить, есть ли чат в базе, и занести его, если его там нет.\n
-    Возвращает True, если он был в базе, и False, если нет"""
-    filename = DATA_FOLDER + "/" + TELEGRAM_CHAT_IDS
-    chat_id = str(chat_id)
-
-    ids = read_all_saved_chat_id()
-
-    if chat_id not in ids:
-        with open(filename,"a+") as file:
-            file.write(chat_id + "\n")
-        return False
-
-    return True
-
-# def check_eye(chat_id: str) -> bool:
-#     """Проверка, разрешено ли этому chat_id пользоваться функцией eye"""
-#     chat_id = str(chat_id)
-
-#     if save_telegram_chat_ids(chat_id):
-#         filename = DATA_FOLDER + "/" + TELEGRAM_CHAT_IDS_EYE
-
-#         with open(filename) as file:
-#             ids = file.readlines()
-#         ids = [i[:-1] for i in ids] # убираем \n в конце
-
-#         if chat_id in ids:
-#             return True
-
-#     return False
 
 # -------------------------------
 # Database v2 via langchain tools
