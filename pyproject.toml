@@ -16,7 +16,6 @@ langchain-community = "^0.3.8"
 pandas = "^2.2.3"
 fastapi = {extras = ["standard"], version = "^0.115.5", optional = true}
 uvicorn = {extras = ["standard"], version = "^0.32.1", optional = true}
-langchain-unstructured = "^0.1.6"
 
 [tool.poetry.extras]
 api = ["fastapi", "uvicorn"]

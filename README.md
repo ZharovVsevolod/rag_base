@@ -50,6 +50,12 @@ docker exec ollama_c ollama pull gemma2
 
 
 ## Создание базы знаний по документам
+Перед выполнением необходимо выполнить следующие команды:
+```bash
+pip install -qU langchain-unstructured "unstructured[pdf]"
+apt-get install poppler-utils tesseract-ocr
+```
+
 Для создание БЗ по "сырым" pdf-документам необходимо поместить эти документы по пути `data/docs/raw` (путь, указанный в config.py как RAW_DOCS). После чего выполнить команду:
 ```bash
 python bairdotr/prepare_raw.py
