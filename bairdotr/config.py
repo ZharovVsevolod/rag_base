@@ -30,6 +30,7 @@ HISTORY_FILE_NAME = "history.csv"
 HOT_HISTORY = "hot_history"
 
 # Vector Store
+RAW_DOCS = "data/docs/raw"
 PREPARED = "data/docs/cleaned_and_prepared"
 JUST_CLEANED = "data/docs/just_cleaned"
 CHUNK_SIZE_FOR_RECURSIVE = 600
